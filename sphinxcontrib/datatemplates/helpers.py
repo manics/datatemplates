@@ -1,3 +1,11 @@
+def _list_table_row_item(prefix, item):
+    if "\n" not in item:
+        return "%s%s" % (prefix, item)
+    lines = item.strip().split("\n")
+    row_lines = ["%s| %s" % (prefix, lines[0])]
+    row_lines.extend("%s| %s" % (" " * len(prefix), line) for line in lines[1:])
+    return '\n'.join(row_lines)
+
 def make_list_table(headers, data, title='', columns=None):
     """Build a list-table directive.
 
@@ -17,9 +25,9 @@ def make_list_table(headers, data, title='', columns=None):
     for h in headers[1:]:
         add('     * %s' % h)
     for row in data:
-        add('   - * %s' % row[0])
+        add(_list_table_row_item('   - * ', row[0]))
         for r in row[1:]:
-            add('     * %s' % r)
+            add(_list_table_row_item('     * ', r))
     add('')
     return '\n'.join(results)
 
